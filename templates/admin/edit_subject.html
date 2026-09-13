@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Subject | Examination Service Portal</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        .edit-page {
+            padding-bottom: 60px;
+        }
+
+        .edit-card {
+            max-width: 850px;
+            margin: 35px auto;
+            background: #ffffff;
+            border: 1px solid #dfe6ed;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(24, 59, 92, 0.05);
+            overflow: hidden;
+        }
+
+        .edit-heading {
+            padding: 28px;
+            border-bottom: 1px solid #e7ecf1;
+        }
+
+        .edit-heading span {
+            color: #24609a;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .edit-heading h2 {
+            color: #183b5c;
+            font-size: 22px;
+            margin-top: 6px;
+        }
+
+        .edit-heading p {
+            color: #737f8c;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .edit-form {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #344b61;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px 13px;
+            border: 1px solid #cbd6e0;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #344b61;
+            background: #ffffff;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #24609a;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .save-button {
+            border: none;
+            background: #12467c;
+            color: #ffffff;
+            padding: 12px 22px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .save-button:hover {
+            background: #0d385f;
+        }
+
+        .cancel-button {
+            display: inline-block;
+            background: #f3f6f8;
+            color: #526577;
+            padding: 12px 22px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            border: 1px solid #dfe6ed;
+        }
+
+        .cancel-button:hover {
+            background: #e9eef2;
+        }
+
+        .error-message {
+            margin: 20px 30px 0;
+            padding: 11px 14px;
+            background: #fff4f4;
+            border: 1px solid #f0caca;
+            color: #a33a3a;
+            border-radius: 6px;
+            font-size: 12px;
+        }
+
+        @media (max-width: 600px) {
+
+            .edit-form {
+                padding: 20px;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- HEADER -->
+
+<header class="top-header">
+
+    <div class="header-container">
+
+        <div class="brand">
+
+            <div class="brand-logo">
+                ES
+            </div>
+
+            <div>
+
+                <h1>
+                    Examination Service Portal
+                </h1>
+
+                <p>
+                    Edit Subject
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="header-actions">
+
+            <span class="student-name">
+                Welcome, {{ session["admin_name"] }}
+            </span>
+
+            <a href="{{ url_for('logout') }}"
+               class="header-login">
+
+                Logout
+
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- NAVIGATION -->
+
+<nav class="navigation">
+
+    <div class="nav-container">
+
+        <a href="{{ url_for('admin_dashboard') }}">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('admin_students') }}">
+            Students
+        </a>
+
+        <a href="{{ url_for('admin_subjects') }}"
+           class="nav-active">
+
+            Subjects
+
+        </a>
+
+        <a href="#">
+            Examinations
+        </a>
+
+        <a href="#">
+            Results
+        </a>
+
+        <a href="#">
+            Notifications
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- MAIN -->
+
+<main class="dashboard-container edit-page">
+
+
+    <section class="dashboard-welcome">
+
+        <div>
+
+            <span class="welcome-label">
+                ADMINISTRATION
+            </span>
+
+            <h2>
+                Edit Subject
+            </h2>
+
+            <p>
+                Update the subject information stored in the examination portal.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- EDIT CARD -->
+
+    <section class="edit-card">
+
+
+        <div class="edit-heading">
+
+            <span>
+                SUBJECT MANAGEMENT
+            </span>
+
+            <h2>
+                Update Subject Details
+            </h2>
+
+            <p>
+                Modify the details below and save your changes.
+            </p>
+
+        </div>
+
+
+        {% if error %}
+
+        <div class="error-message">
+
+            ⚠️ {{ error }}
+
+        </div>
+
+        {% endif %}
+
+
+        <form method="POST"
+              class="edit-form">
+
+
+            <!-- SUBJECT NAME -->
+
+            <div class="form-group">
+
+                <label>
+                    Subject Name
+                </label>
+
+                <input type="text"
+                       name="subject_name"
+                       value="{{ subject['subject_name'] }}"
+                       required>
+
+            </div>
+
+
+            <!-- SUBJECT CODE -->
+
+            <div class="form-group">
+
+                <label>
+                    Subject Code
+                </label>
+
+                <input type="text"
+                       name="subject_code"
+                       value="{{ subject['subject_code'] }}"
+                       required>
+
+            </div>
+
+
+            <!-- SEMESTER -->
+
+            <div class="form-group">
+
+                <label>
+                    Semester
+                </label>
+
+                <select name="semester"
+                        required>
+
+                    <option value="1"
+                        {% if subject['semester'] == 1 %}selected{% endif %}>
+                        1st Semester
+                    </option>
+
+                    <option value="2"
+                        {% if subject['semester'] == 2 %}selected{% endif %}>
+                        2nd Semester
+                    </option>
+
+                    <option value="3"
+                        {% if subject['semester'] == 3 %}selected{% endif %}>
+                        3rd Semester
+                    </option>
+
+                    <option value="4"
+                        {% if subject['semester'] == 4 %}selected{% endif %}>
+                        4th Semester
+                    </option>
+
+                    <option value="5"
+                        {% if subject['semester'] == 5 %}selected{% endif %}>
+                        5th Semester
+                    </option>
+
+                    <option value="6"
+                        {% if subject['semester'] == 6 %}selected{% endif %}>
+                        6th Semester
+                    </option>
+
+                    <option value="7"
+                        {% if subject['semester'] == 7 %}selected{% endif %}>
+                        7th Semester
+                    </option>
+
+                    <option value="8"
+                        {% if subject['semester'] == 8 %}selected{% endif %}>
+                        8th Semester
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="form-actions">
+
+                <button type="submit"
+                        class="save-button">
+
+                    💾 Save Changes
+
+                </button>
+
+
+                <a href="{{ url_for('admin_subjects') }}"
+                   class="cancel-button">
+
+                    ← Cancel
+
+                </a>
+
+            </div>
+
+
+        </form>
+
+
+    </section>
+
+
+</main>
+
+
+<!-- FOOTER -->
+
+<footer class="footer">
+
+    <div class="footer-bottom">
+
+        <p>
+            © 2026 Integrated Student Examination Service Portal
+        </p>
+
+        <p>
+            Mini Project | VTU
+        </p>
+
+    </div>
+
+</footer>
+
+
+</body>
+
+</html>

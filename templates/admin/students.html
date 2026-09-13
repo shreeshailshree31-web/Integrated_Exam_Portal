@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Student Management | Examination Service Portal</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        .student-management-page {
+            padding-bottom: 60px;
+        }
+
+        .student-form-card,
+        .student-list-card {
+            background: #ffffff;
+            border: 1px solid #dfe6ed;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(24, 59, 92, 0.04);
+        }
+
+        .student-form-card {
+            padding: 28px;
+            margin-bottom: 35px;
+        }
+
+        .student-form-heading {
+            margin-bottom: 24px;
+        }
+
+        .student-form-heading span,
+        .student-list-heading span {
+            color: #24609a;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .student-form-heading h2,
+        .student-list-heading h2 {
+            color: #183b5c;
+            font-size: 21px;
+            margin-top: 5px;
+        }
+
+        .student-form-heading p,
+        .student-list-heading p {
+            color: #737f8c;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .student-form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .student-form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .student-form-group label {
+            color: #29445d;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 7px;
+        }
+
+        .student-form-group input,
+        .student-form-group select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px 13px;
+            border: 1px solid #cbd7e2;
+            border-radius: 7px;
+            background: #ffffff;
+            color: #263f55;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .student-form-group input:focus,
+        .student-form-group select:focus {
+            border-color: #24609a;
+            box-shadow: 0 0 0 3px rgba(36, 96, 154, 0.08);
+        }
+
+        .student-form-full {
+            grid-column: 1 / -1;
+        }
+
+        .student-add-button {
+            margin-top: 22px;
+        }
+
+        .student-error {
+            background: #fff3f3;
+            border: 1px solid #f0caca;
+            color: #a33a3a;
+            padding: 12px 14px;
+            border-radius: 7px;
+            font-size: 12px;
+            margin-bottom: 20px;
+        }
+
+        .student-list-card {
+            overflow: hidden;
+        }
+
+        .student-list-heading {
+            padding: 23px 25px;
+            border-bottom: 1px solid #e7ecf1;
+        }
+
+        .student-table-wrapper {
+            overflow-x: auto;
+        }
+
+        .student-table {
+            width: 100%;
+            min-width: 900px;
+            border-collapse: collapse;
+        }
+
+        .student-table th {
+            background: #f5f8fb;
+            color: #526577;
+            font-size: 11px;
+            font-weight: 700;
+            text-align: left;
+            padding: 13px 16px;
+            border-bottom: 1px solid #dfe6ed;
+        }
+
+        .student-table td {
+            color: #5f6f7e;
+            font-size: 12px;
+            padding: 16px;
+            border-bottom: 1px solid #edf1f4;
+            vertical-align: middle;
+        }
+
+        .student-table tbody tr:hover {
+            background: #fafcfe;
+        }
+
+        .student-usn {
+            color: #183b5c;
+            font-weight: 700;
+        }
+
+        .semester-badge {
+            display: inline-block;
+            background: #eef4f9;
+            color: #24609a;
+            border-radius: 5px;
+            padding: 5px 8px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .student-action-area {
+            display: flex;
+            gap: 7px;
+            align-items: flex-start;
+        }
+
+        .edit-button {
+            border: 1px solid #cbd7e2;
+            background: #ffffff;
+            color: #24609a;
+            border-radius: 6px;
+            padding: 7px 11px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .edit-button:hover {
+            background: #eef4f9;
+        }
+
+        .delete-button {
+            border: 1px solid #e7caca;
+            background: #fff7f7;
+            color: #b33b3b;
+            border-radius: 6px;
+            padding: 7px 11px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .delete-button:hover {
+            background: #ffeded;
+        }
+
+        .edit-panel {
+            margin-top: 10px;
+            padding: 18px;
+            background: #f8fafc;
+            border: 1px solid #e1e8ef;
+            border-radius: 8px;
+        }
+
+        .edit-panel form {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .edit-panel label {
+            display: block;
+            color: #526577;
+            font-size: 10px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .edit-panel input,
+        .edit-panel select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 9px 10px;
+            border: 1px solid #cbd7e2;
+            border-radius: 6px;
+            background: #ffffff;
+            font-size: 11px;
+            outline: none;
+        }
+
+        .edit-submit {
+            grid-column: 1 / -1;
+            justify-self: start;
+            border: none;
+            background: #123f73;
+            color: #ffffff;
+            border-radius: 6px;
+            padding: 9px 15px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .no-students {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        .no-students-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .no-students h3 {
+            color: #344b61;
+            font-size: 15px;
+        }
+
+        .no-students p {
+            color: #7a8591;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 800px) {
+
+            .student-form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .edit-panel form {
+                grid-template-columns: 1fr;
+            }
+
+            .edit-submit {
+                grid-column: auto;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- HEADER -->
+
+<header class="top-header">
+
+    <div class="header-container">
+
+        <div class="brand">
+
+            <div class="brand-logo">
+                ES
+            </div>
+
+            <div>
+
+                <h1>
+                    Examination Service Portal
+                </h1>
+
+                <p>
+                    Student Management
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="header-actions">
+
+            <span class="student-name">
+                Welcome, {{ session["admin_name"] }}
+            </span>
+
+            <a href="{{ url_for('logout') }}"
+               class="header-login">
+
+                Logout
+
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- NAVIGATION -->
+
+<nav class="navigation">
+
+    <div class="nav-container">
+
+        <a href="{{ url_for('admin_dashboard') }}">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('admin_subjects') }}">
+            Subjects
+        </a>
+
+        <a href="{{ url_for('admin_students') }}"
+           class="nav-active">
+            Students
+        </a>
+
+        <a href="#">
+            Examinations
+        </a>
+
+        <a href="#">
+            Results
+        </a>
+
+        <a href="#">
+            Notifications
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- MAIN -->
+
+<main class="dashboard-container student-management-page">
+
+
+    <!-- PAGE TITLE -->
+
+    <section class="dashboard-welcome">
+
+        <div>
+
+            <span class="welcome-label">
+                ADMINISTRATION
+            </span>
+
+            <h2>
+                Student Management
+            </h2>
+
+            <p>
+                Add, edit and manage student records in the examination portal.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ADD STUDENT -->
+
+    <section class="student-form-card">
+
+        <div class="student-form-heading">
+
+            <span>
+                STUDENT MANAGEMENT
+            </span>
+
+            <h2>
+                Add New Student
+            </h2>
+
+            <p>
+                Create a student account for examination portal access.
+            </p>
+
+        </div>
+
+
+        {% if error %}
+
+        <div class="student-error">
+
+            ⚠️ {{ error }}
+
+        </div>
+
+        {% endif %}
+
+
+        <form method="POST">
+
+            <input type="hidden"
+                   name="action"
+                   value="add">
+
+
+            <div class="student-form-grid">
+
+
+                <div class="student-form-group">
+
+                    <label for="usn">
+                        USN
+                    </label>
+
+                    <input
+                        type="text"
+                        id="usn"
+                        name="usn"
+                        placeholder="Example: 1SD23CS002"
+                        required>
+
+                </div>
+
+
+                <div class="student-form-group">
+
+                    <label for="name">
+                        Student Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        placeholder="Enter student name"
+                        required>
+
+                </div>
+
+
+                <div class="student-form-group">
+
+                    <label for="password">
+                        Login Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Create student password"
+                        required>
+
+                </div>
+
+
+                <div class="student-form-group">
+
+                    <label for="branch">
+                        Branch
+                    </label>
+
+                    <select
+                        id="branch"
+                        name="branch"
+                        required>
+
+                        <option value="">
+                            Select Branch
+                        </option>
+
+                        <option value="Computer Science & Engineering">
+                            Computer Science & Engineering
+                        </option>
+
+                        <option value="Information Science & Engineering">
+                            Information Science & Engineering
+                        </option>
+
+                        <option value="Electronics & Communication Engineering">
+                            Electronics & Communication Engineering
+                        </option>
+
+                        <option value="Electrical & Electronics Engineering">
+                            Electrical & Electronics Engineering
+                        </option>
+
+                        <option value="Mechanical Engineering">
+                            Mechanical Engineering
+                        </option>
+
+                        <option value="Civil Engineering">
+                            Civil Engineering
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="student-form-group">
+
+                    <label for="semester">
+                        Semester
+                    </label>
+
+                    <select
+                        id="semester"
+                        name="semester"
+                        required>
+
+                        <option value="">
+                            Select Semester
+                        </option>
+
+                        <option value="1">1st Semester</option>
+                        <option value="2">2nd Semester</option>
+                        <option value="3">3rd Semester</option>
+                        <option value="4">4th Semester</option>
+                        <option value="5">5th Semester</option>
+                        <option value="6">6th Semester</option>
+                        <option value="7">7th Semester</option>
+                        <option value="8">8th Semester</option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="primary-button student-add-button">
+
+                + Add Student
+
+            </button>
+
+        </form>
+
+    </section>
+
+
+    <!-- STUDENT LIST -->
+
+    <section class="student-list-card">
+
+
+        <div class="student-list-heading">
+
+            <span>
+                STUDENT DATABASE
+            </span>
+
+            <h2>
+                Registered Students
+            </h2>
+
+            <p>
+                View and manage student accounts currently stored in MongoDB.
+            </p>
+
+        </div>
+
+
+        {% if students %}
+
+
+        <div class="student-table-wrapper">
+
+            <table class="student-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>USN</th>
+
+                        <th>Student Name</th>
+
+                        <th>Branch</th>
+
+                        <th>Semester</th>
+
+                        <th>Actions</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for student in students %}
+
+                    <tr>
+
+                        <td>
+
+                            <span class="student-usn">
+                                {{ student["usn"] }}
+                            </span>
+
+                        </td>
+
+
+                        <td>
+                            {{ student["name"] }}
+                        </td>
+
+
+                        <td>
+                            {{ student["branch"] }}
+                        </td>
+
+
+                        <td>
+
+                            <span class="semester-badge">
+
+                                {{ student["semester"] }}th Semester
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="student-action-area">
+
+
+                                <!-- EDIT -->
+
+                                <details>
+
+                                    <summary class="edit-button">
+                                        Edit
+                                    </summary>
+
+
+                                    <div class="edit-panel">
+
+                                        <form method="POST">
+
+                                            <input
+                                                type="hidden"
+                                                name="action"
+                                                value="edit">
+
+
+                                            <input
+                                                type="hidden"
+                                                name="usn"
+                                                value="{{ student['usn'] }}">
+
+
+                                            <div>
+
+                                                <label>
+                                                    Student Name
+                                                </label>
+
+                                                <input
+                                                    type="text"
+                                                    name="name"
+                                                    value="{{ student['name'] }}"
+                                                    required>
+
+                                            </div>
+
+
+                                            <div>
+
+                                                <label>
+                                                    Password
+                                                </label>
+
+                                                <input
+                                                    type="password"
+                                                    name="password"
+                                                    value="{{ student['password'] }}"
+                                                    required>
+
+                                            </div>
+
+
+                                            <div>
+
+                                                <label>
+                                                    Branch
+                                                </label>
+
+                                                <input
+                                                    type="text"
+                                                    name="branch"
+                                                    value="{{ student['branch'] }}"
+                                                    required>
+
+                                            </div>
+
+
+                                            <div>
+
+                                                <label>
+                                                    Semester
+                                                </label>
+
+                                                <select
+                                                    name="semester"
+                                                    required>
+
+                                                    {% for sem in range(1, 9) %}
+
+                                                    <option
+                                                        value="{{ sem }}"
+                                                        {% if student["semester"] == sem %}selected{% endif %}>
+
+                                                        {{ sem }}th Semester
+
+                                                    </option>
+
+                                                    {% endfor %}
+
+                                                </select>
+
+                                            </div>
+
+
+                                            <button
+                                                type="submit"
+                                                class="edit-submit">
+
+                                                Save Changes
+
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+
+                                </details>
+
+
+                                <!-- DELETE -->
+
+                                <form
+                                    method="POST"
+                                    onsubmit="return confirm('Are you sure you want to delete this student?');">
+
+                                    <input
+                                        type="hidden"
+                                        name="action"
+                                        value="delete">
+
+
+                                    <input
+                                        type="hidden"
+                                        name="usn"
+                                        value="{{ student['usn'] }}">
+
+
+                                    <button
+                                        type="submit"
+                                        class="delete-button">
+
+                                        Delete
+
+                                    </button>
+
+                                </form>
+
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        {% else %}
+
+
+        <div class="no-students">
+
+            <div class="no-students-icon">
+                👨‍🎓
+            </div>
+
+            <h3>
+                No students found
+            </h3>
+
+            <p>
+                Add your first student using the form above.
+            </p>
+
+        </div>
+
+
+        {% endif %}
+
+
+    </section>
+
+
+</main>
+
+
+<!-- FOOTER -->
+
+<footer class="footer">
+
+    <div class="footer-bottom">
+
+        <p>
+            © 2026 Integrated Student Examination Service Portal
+        </p>
+
+        <p>
+            Mini Project | VTU
+        </p>
+
+    </div>
+
+</footer>
+
+
+</body>
+
+</html>

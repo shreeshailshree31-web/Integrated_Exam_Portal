@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+```
+<title>Hall Ticket Management | VTU Examination Portal</title>
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}">
+
+<style>
+
+    body {
+        background: #f5f7fb;
+        font-family: Arial, sans-serif;
+    }
+
+    .container {
+        max-width: 1150px;
+        margin: 40px auto;
+        padding: 20px;
+    }
+
+    .back-btn {
+        display: inline-block;
+        margin-bottom: 20px;
+        text-decoration: none;
+        color: #2563eb;
+        font-weight: bold;
+    }
+
+    .header {
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        margin-bottom: 25px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .header h1 {
+        margin: 0 0 8px;
+    }
+
+    .header p {
+        margin: 0;
+        color: #666;
+    }
+
+    .card {
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        margin-bottom: 25px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .card h2 {
+        margin-top: 0;
+    }
+
+    label {
+        display: block;
+        margin-top: 20px;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+
+    select {
+        display: block;
+        width: 100%;
+        padding: 13px 15px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        font-size: 15px;
+        background-color: white;
+        color: #111827;
+        cursor: pointer;
+        box-sizing: border-box;
+    }
+
+    select:hover {
+        border-color: #2563eb;
+    }
+
+    select:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    button {
+        margin-top: 25px;
+        padding: 13px 24px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        background: #2563eb;
+        color: white;
+        font-size: 15px;
+    }
+
+    button:hover {
+        background: #1d4ed8;
+    }
+
+    button:disabled {
+        background: #9ca3af;
+        cursor: not-allowed;
+    }
+
+    .success {
+        background: #dcfce7;
+        color: #166534;
+        padding: 13px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+    }
+
+    .error {
+        background: #fee2e2;
+        color: #991b1b;
+        padding: 13px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+    }
+
+    .info {
+        background: #eff6ff;
+        color: #1e40af;
+        padding: 13px;
+        border-radius: 8px;
+        margin-top: 15px;
+    }
+
+    .warning {
+        background: #fff7ed;
+        color: #9a3412;
+        padding: 13px;
+        border-radius: 8px;
+        margin-top: 15px;
+    }
+
+    .subject-section {
+        margin-top: 25px;
+        padding: 20px;
+        background: #f8fafc;
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
+    }
+
+    .subject-section h3 {
+        margin-top: 0;
+        margin-bottom: 15px;
+    }
+
+    .subject-table {
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #e5e7eb;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th,
+    td {
+        padding: 13px;
+        border-bottom: 1px solid #eee;
+        text-align: left;
+    }
+
+    th {
+        background: #f8fafc;
+        font-weight: bold;
+    }
+
+    tr:last-child td {
+        border-bottom: none;
+    }
+
+    .delete-btn {
+        color: #dc2626;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .delete-btn:hover {
+        text-decoration: underline;
+    }
+
+    .empty {
+        text-align: center;
+        padding: 25px;
+        color: #777;
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    .exam-info {
+        margin-top: 18px;
+        padding: 16px;
+        background: #f8fafc;
+        border-radius: 10px;
+        border: 1px solid #e5e7eb;
+    }
+
+    .exam-info strong {
+        font-size: 16px;
+    }
+
+    .exam-info p {
+        margin: 8px 0;
+    }
+
+    .loading {
+        color: #2563eb;
+        font-weight: bold;
+        padding: 10px 0;
+    }
+
+    .status-published {
+        color: #15803d;
+        font-weight: bold;
+    }
+
+    .status-unpublished {
+        color: #dc2626;
+        font-weight: bold;
+    }
+
+    .selected-count {
+        margin-top: 12px;
+        font-weight: bold;
+        color: #374151;
+    }
+
+    .help-text {
+        margin-top: 7px;
+        color: #6b7280;
+        font-size: 13px;
+    }
+
+    .subject-code {
+        font-weight: bold;
+        color: #2563eb;
+    }
+
+    .subject-name {
+        font-weight: 500;
+    }
+
+    .no-exams {
+        margin-top: 10px;
+        color: #dc2626;
+        font-size: 14px;
+    }
+
+    @media (max-width: 800px) {
+
+        table {
+            display: block;
+            overflow-x: auto;
+        }
+
+        .container {
+            margin: 20px auto;
+            padding: 12px;
+        }
+
+        .card {
+            padding: 18px;
+        }
+
+        th,
+        td {
+            white-space: nowrap;
+        }
+
+    }
+
+</style>
+```
+
+</head>
+
+<body>
+
+<div class="container">
+
+```
+<a href="{{ url_for('admin_dashboard') }}"
+   class="back-btn">
+    ← Back to Admin Dashboard
+</a>
+
+
+<div class="header">
+
+    <h1>🪪 Hall Ticket Management</h1>
+
+    <p>
+        Generate and manage student examination hall tickets.
+    </p>
+
+</div>
+
+
+{% if success %}
+
+<div class="success">
+    {{ success }}
+</div>
+
+{% endif %}
+
+
+{% if error %}
+
+<div class="error">
+    {{ error }}
+</div>
+
+{% endif %}
+
+
+<div class="card">
+
+    <h2>Generate Hall Ticket</h2>
+
+
+    <form method="POST" id="hallTicketForm">
+
+
+        <!-- ================================================= -->
+        <!-- STUDENT -->
+        <!-- ================================================= -->
+
+        <label for="studentSelect">
+            Select Student
+        </label>
+
+        <select
+            name="usn"
+            id="studentSelect"
+            required
+        >
+
+            <option value="">
+                -- Select Student --
+            </option>
+
+            {% for student in students %}
+
+            <option
+                value="{{ student['usn'] }}"
+                data-semester="{{ student.get('semester', '') }}"
+            >
+
+                {{ student['usn'] }}
+                -
+                {{ student['name'] }}
+                -
+                Semester {{ student.get('semester', '') }}
+
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+
+        <div class="help-text">
+            Select a student to view their registered subjects.
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- EXAMINATION -->
+        <!-- ================================================= -->
+
+        <label for="examSelect">
+            Select Examination
+        </label>
+
+        <select
+            name="exam_id"
+            id="examSelect"
+            required
+        >
+
+            <option value="">
+                -- Select Examination --
+            </option>
+
+
+            <!-- IMPORTANT FIX:
+                 app.py sends "examinations",
+                 NOT "exams".
+            -->
+
+            {% for exam in examinations %}
+
+            <option
+                value="{{ exam['_id'] }}"
+                data-semester="{{ exam.get('semester', '') }}"
+                data-exam-name="{{ exam.get('exam_name', '') }}"
+                data-exam-type="{{ exam.get('exam_type', '') }}"
+                data-exam-date="{{ exam.get('exam_date', '') }}"
+            >
+
+                {{ exam.get('exam_name', '') }}
+                -
+                {{ exam.get('exam_type', '') }}
+                -
+                Semester {{ exam.get('semester', '') }}
+
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+
+        {% if not examinations %}
+
+        <div class="no-exams">
+
+            ⚠️ No examinations have been created yet.
+
+            Go to
+            <b>Admin → Examination Management</b>
+            and create an examination first.
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- ================================================= -->
+        <!-- EXAMINATION INFORMATION -->
+        <!-- ================================================= -->
+
+        <div
+            id="examInfo"
+            class="exam-info hidden"
+        >
+
+            <strong>
+                📋 Examination Details
+            </strong>
+
+            <p>
+                <b>Examination:</b>
+                <span id="examName">-</span>
+            </p>
+
+            <p>
+                <b>Type:</b>
+                <span id="examType">-</span>
+            </p>
+
+            <p>
+                <b>Semester:</b>
+                <span id="examSemester">-</span>
+            </p>
+
+            <p>
+                <b>Exam Date:</b>
+                <span id="examDate">-</span>
+            </p>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- SEMESTER WARNING -->
+        <!-- ================================================= -->
+
+        <div
+            id="semesterWarning"
+            class="warning hidden"
+        >
+
+            ⚠️ The selected examination does not belong
+            to the student's semester.
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- REGISTERED SUBJECTS -->
+        <!-- ================================================= -->
+
+        <div
+            id="subjectsSection"
+            class="subject-section hidden"
+        >
+
+            <h3>
+                📚 Registered Examination Subjects
+            </h3>
+
+
+            <div
+                id="subjectsLoading"
+                class="loading hidden"
+            >
+                Loading registered subjects...
+            </div>
+
+
+            <div
+                id="subjectsMessage"
+                class="info hidden"
+            >
+            </div>
+
+
+            <div
+                id="subjectsTableContainer"
+                class="subject-table hidden"
+            >
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>#</th>
+
+                            <th>Subject Code</th>
+
+                            <th>Subject Name</th>
+
+                            <th>Semester</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="subjectsTableBody">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <div
+                id="selectedCount"
+                class="selected-count hidden"
+            >
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- GENERATE BUTTON -->
+        <!-- ================================================= -->
+
+        <button
+            type="submit"
+            id="generateButton"
+        >
+            Generate Hall Ticket
+        </button>
+
+    </form>
+
+</div>
+
+
+<!-- ===================================================== -->
+<!-- GENERATED HALL TICKETS -->
+<!-- ===================================================== -->
+
+<div class="card">
+
+    <h2>Generated Hall Tickets</h2>
+
+
+    {% if hall_tickets %}
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>Hall Ticket No.</th>
+
+                <th>USN</th>
+
+                <th>Student</th>
+
+                <th>Semester</th>
+
+                <th>Examination</th>
+
+                <th>Status</th>
+
+                <th>Action</th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+        {% for ticket in hall_tickets %}
+
+            <tr>
+
+                <td>
+                    {{ ticket.get('hall_ticket_number', ticket.get('hall_ticket_no', '-')) }}
+                </td>
+
+                <td>
+                    {{ ticket.get('usn', '-') }}
+                </td>
+
+                <td>
+                    {{ ticket.get('student_name', '-') }}
+                </td>
+
+                <td>
+                    {{ ticket.get('semester', '-') }}
+                </td>
+
+                <td>
+                    {{ ticket.get('exam_name', '-') }}
+                </td>
+
+                <td>
+
+                    {% if ticket.get('published', False) %}
+
+                    <span class="status-published">
+                        Published
+                    </span>
+
+                    {% else %}
+
+                    <span class="status-unpublished">
+                        Not Published
+                    </span>
+
+                    {% endif %}
+
+                </td>
+
+                <td>
+
+                    <a
+                        class="delete-btn"
+                        href="{{ url_for(
+                            'delete_hall_ticket',
+                            hall_ticket_id=ticket['_id']
+                        ) }}"
+                        onclick="return confirm('Delete this hall ticket?');"
+                    >
+                        Delete
+                    </a>
+
+                </td>
+
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+    {% else %}
+
+    <div class="empty">
+        No hall tickets generated yet.
+    </div>
+
+    {% endif %}
+
+</div>
+```
+
+</div>
+
+<script>
+
+const studentSelect =
+    document.getElementById("studentSelect");
+
+const examSelect =
+    document.getElementById("examSelect");
+
+const subjectsSection =
+    document.getElementById("subjectsSection");
+
+const subjectsLoading =
+    document.getElementById("subjectsLoading");
+
+const subjectsMessage =
+    document.getElementById("subjectsMessage");
+
+const subjectsTableContainer =
+    document.getElementById("subjectsTableContainer");
+
+const subjectsTableBody =
+    document.getElementById("subjectsTableBody");
+
+const selectedCount =
+    document.getElementById("selectedCount");
+
+const semesterWarning =
+    document.getElementById("semesterWarning");
+
+const examInfo =
+    document.getElementById("examInfo");
+
+const examName =
+    document.getElementById("examName");
+
+const examType =
+    document.getElementById("examType");
+
+const examSemester =
+    document.getElementById("examSemester");
+
+const examDate =
+    document.getElementById("examDate");
+
+const generateButton =
+    document.getElementById("generateButton");
+
+
+/* ============================================================
+   EXAMINATION INFORMATION
+   ============================================================ */
+
+function updateExamInformation() {
+
+    const option =
+        examSelect.options[
+            examSelect.selectedIndex
+        ];
+
+
+    if (!examSelect.value) {
+
+        examInfo.classList.add("hidden");
+
+        return;
+    }
+
+
+    examName.textContent =
+        option.dataset.examName || "-";
+
+    examType.textContent =
+        option.dataset.examType || "-";
+
+    examSemester.textContent =
+        option.dataset.semester || "-";
+
+    examDate.textContent =
+        option.dataset.examDate || "-";
+
+
+    examInfo.classList.remove("hidden");
+}
+
+
+/* ============================================================
+   SEMESTER CHECK
+   ============================================================ */
+
+function checkSemester() {
+
+    semesterWarning.classList.add("hidden");
+
+    generateButton.disabled = false;
+
+
+    if (
+        !studentSelect.value ||
+        !examSelect.value
+    ) {
+
+        return;
+    }
+
+
+    const studentOption =
+        studentSelect.options[
+            studentSelect.selectedIndex
+        ];
+
+
+    const examOption =
+        examSelect.options[
+            examSelect.selectedIndex
+        ];
+
+
+    const studentSemester =
+        String(
+            studentOption.dataset.semester || ""
+        ).trim();
+
+
+    const selectedExamSemester =
+        String(
+            examOption.dataset.semester || ""
+        ).trim();
+
+
+    if (
+        studentSemester &&
+        selectedExamSemester &&
+        studentSemester !== selectedExamSemester
+    ) {
+
+        semesterWarning.classList.remove("hidden");
+
+        generateButton.disabled = true;
+    }
+}
+
+
+/* ============================================================
+   RESET SUBJECT DISPLAY
+   ============================================================ */
+
+function resetSubjectsDisplay() {
+
+    subjectsSection.classList.add("hidden");
+
+    subjectsLoading.classList.add("hidden");
+
+    subjectsMessage.classList.add("hidden");
+
+    subjectsTableContainer.classList.add("hidden");
+
+    selectedCount.classList.add("hidden");
+
+    subjectsTableBody.innerHTML = "";
+
+    subjectsMessage.textContent = "";
+
+    selectedCount.textContent = "";
+}
+
+
+/* ============================================================
+   LOAD REGISTERED SUBJECTS
+   ============================================================ */
+
+async function loadRegisteredSubjects() {
+
+    const usn =
+        studentSelect.value.trim();
+
+
+    resetSubjectsDisplay();
+
+
+    if (!usn) {
+
+        return;
+    }
+
+
+    subjectsSection.classList.remove("hidden");
+
+    subjectsLoading.classList.remove("hidden");
+
+
+    try {
+
+        const baseUrl =
+            "{{ url_for('student_subjects', usn='PLACEHOLDER') }}";
+
+
+        const finalUrl =
+            baseUrl.replace(
+                "PLACEHOLDER",
+                encodeURIComponent(usn)
+            );
+
+
+        console.log(
+            "Loading subjects for:",
+            usn
+        );
+
+
+        const response =
+            await fetch(
+                finalUrl,
+                {
+                    method: "GET",
+                    headers: {
+                        "Accept": "application/json"
+                    }
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Server returned HTTP " +
+                response.status
+            );
+        }
+
+
+        const data =
+            await response.json();
+
+
+        console.log(
+            "Subject API response:",
+            data
+        );
+
+
+        subjectsLoading.classList.add("hidden");
+
+
+        const subjects =
+            Array.isArray(data.subjects)
+                ? data.subjects
+                : [];
+
+
+        if (subjects.length === 0) {
+
+            subjectsMessage.textContent =
+                data.message ||
+                "No registered subjects found for this student.";
+
+            subjectsMessage.classList.remove("hidden");
+
+            return;
+        }
+
+
+        subjects.forEach(
+            function(subject, index) {
+
+                const row =
+                    document.createElement("tr");
+
+
+                const numberCell =
+                    document.createElement("td");
+
+                numberCell.textContent =
+                    index + 1;
+
+
+                const codeCell =
+                    document.createElement("td");
+
+                codeCell.className =
+                    "subject-code";
+
+                codeCell.textContent =
+                    subject.subject_code || "-";
+
+
+                const nameCell =
+                    document.createElement("td");
+
+                nameCell.className =
+                    "subject-name";
+
+                nameCell.textContent =
+                    subject.subject_name || "-";
+
+
+                const semesterCell =
+                    document.createElement("td");
+
+                semesterCell.textContent =
+                    subject.semester || "-";
+
+
+                row.appendChild(numberCell);
+
+                row.appendChild(codeCell);
+
+                row.appendChild(nameCell);
+
+                row.appendChild(semesterCell);
+
+
+                subjectsTableBody.appendChild(row);
+
+            }
+        );
+
+
+        subjectsTableContainer.classList.remove(
+            "hidden"
+        );
+
+
+        selectedCount.textContent =
+            "Total registered subjects: " +
+            subjects.length;
+
+
+        selectedCount.classList.remove(
+            "hidden"
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Subject loading error:",
+            error
+        );
+
+
+        subjectsLoading.classList.add(
+            "hidden"
+        );
+
+
+        subjectsMessage.textContent =
+            "Unable to load registered subjects.";
+
+
+        subjectsMessage.classList.remove(
+            "hidden"
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   STUDENT CHANGE
+   ============================================================ */
+
+studentSelect.addEventListener(
+    "change",
+    function() {
+
+        checkSemester();
+
+        loadRegisteredSubjects();
+
+    }
+);
+
+
+/* ============================================================
+   EXAMINATION CHANGE
+   ============================================================ */
+
+examSelect.addEventListener(
+    "change",
+    function() {
+
+        console.log(
+            "Examination selected:",
+            examSelect.value
+        );
+
+
+        updateExamInformation();
+
+        checkSemester();
+
+    }
+);
+
+
+/* ============================================================
+   INITIAL PAGE LOAD
+   ============================================================ */
+
+updateExamInformation();
+
+checkSemester();
+
+resetSubjectsDisplay();
+
+</script>
+
+</body>
+
+</html>

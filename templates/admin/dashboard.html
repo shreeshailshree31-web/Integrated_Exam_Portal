@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard | Examination Service Portal</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f7fa;
+            color: #344b61;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+
+        /* ==================================================
+           HEADER
+        ================================================== */
+
+        .top-header {
+            background: #183b5c;
+            color: white;
+            padding: 18px 35px;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            width: 44px;
+            height: 44px;
+            background: white;
+            color: #183b5c;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .brand h1 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .brand p {
+            margin: 4px 0 0;
+            font-size: 11px;
+            opacity: .75;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .admin-name {
+            font-size: 12px;
+        }
+
+        .logout {
+            color: white;
+            border: 1px solid rgba(255,255,255,.35);
+            padding: 8px 14px;
+            border-radius: 5px;
+            font-size: 11px;
+            transition: .2s ease;
+        }
+
+        .logout:hover {
+            background: rgba(255,255,255,.1);
+        }
+
+
+        /* ==================================================
+           MAIN CONTAINER
+        ================================================== */
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+
+        /* ==================================================
+           WELCOME
+        ================================================== */
+
+        .welcome {
+            margin-bottom: 30px;
+        }
+
+        .welcome span,
+        .section-label {
+            color: #24609a;
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .welcome h2 {
+            margin: 7px 0 5px;
+            color: #183b5c;
+            font-size: 26px;
+        }
+
+        .welcome p {
+            margin: 0;
+            color: #7a8591;
+            font-size: 13px;
+        }
+
+
+        /* ==================================================
+           STATISTICS
+        ================================================== */
+
+        .admin-statistics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+
+        .admin-statistics.second-row {
+            grid-template-columns: repeat(3, 1fr);
+            margin-bottom: 38px;
+        }
+
+        .admin-stat-card {
+            background: white;
+            border: 1px solid #dfe6ed;
+            border-radius: 12px;
+            padding: 21px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 5px 18px rgba(24,59,92,.04);
+            transition: .2s ease;
+        }
+
+        .admin-stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(24,59,92,.08);
+        }
+
+        .admin-stat-icon {
+            width: 47px;
+            height: 47px;
+            background: #eef4f9;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .admin-stat-card span {
+            display: block;
+            color: #7a8591;
+            font-size: 11px;
+        }
+
+        .admin-stat-card strong {
+            display: block;
+            color: #183b5c;
+            font-size: 25px;
+            margin-top: 3px;
+        }
+
+        .stat-description {
+            color: #9aa5af;
+            font-size: 9px;
+            margin-top: 3px;
+        }
+
+
+        /* ==================================================
+           QUICK ACTIONS
+        ================================================== */
+
+        .section-title {
+            margin-bottom: 18px;
+        }
+
+        .section-title h2 {
+            margin: 5px 0;
+            color: #183b5c;
+            font-size: 20px;
+        }
+
+        .section-title p {
+            margin: 0;
+            color: #7a8591;
+            font-size: 12px;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .quick-action {
+            background: #183b5c;
+            color: white;
+            border-radius: 9px;
+            padding: 15px 17px;
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            transition: .2s ease;
+        }
+
+        .quick-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 18px rgba(24,59,92,.16);
+        }
+
+        .quick-action-icon {
+            font-size: 19px;
+        }
+
+        .quick-action-text strong {
+            display: block;
+            font-size: 12px;
+        }
+
+        .quick-action-text span {
+            display: block;
+            margin-top: 3px;
+            font-size: 9px;
+            opacity: .7;
+        }
+
+
+        /* ==================================================
+           PORTAL MANAGEMENT
+        ================================================== */
+
+        .admin-service-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 45px;
+        }
+
+        .admin-service-card {
+            background: white;
+            border: 1px solid #dfe6ed;
+            border-radius: 11px;
+            padding: 21px;
+            display: block;
+            transition: .2s ease;
+        }
+
+        .admin-service-card:hover {
+            transform: translateY(-3px);
+            border-color: #aebfd0;
+            box-shadow: 0 8px 22px rgba(24,59,92,.08);
+        }
+
+        .service-icon {
+            width: 45px;
+            height: 45px;
+            background: #eef4f9;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 21px;
+            margin-bottom: 15px;
+        }
+
+        .admin-service-card h3 {
+            color: #29445d;
+            font-size: 14px;
+            margin: 0 0 7px;
+        }
+
+        .admin-service-card p {
+            color: #7a8591;
+            font-size: 11px;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .coming-soon {
+            display: inline-block;
+            margin-top: 12px;
+            background: #f1f3f5;
+            color: #7a8591;
+            border-radius: 12px;
+            padding: 4px 8px;
+            font-size: 9px;
+        }
+
+
+        /* ==================================================
+           UPCOMING EXAMINATIONS
+        ================================================== */
+
+        .upcoming-section {
+            background: white;
+            border: 1px solid #dfe6ed;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 35px;
+            box-shadow: 0 6px 20px rgba(24,59,92,.04);
+        }
+
+        .section-heading {
+            padding: 23px 25px;
+            border-bottom: 1px solid #e7ecf1;
+        }
+
+        .section-heading h2 {
+            color: #183b5c;
+            font-size: 20px;
+            margin: 5px 0;
+        }
+
+        .section-heading p {
+            color: #737f8c;
+            font-size: 12px;
+            margin: 0;
+        }
+
+        .exam-list {
+            padding: 0;
+        }
+
+        .exam-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 17px 25px;
+            border-bottom: 1px solid #edf1f4;
+        }
+
+        .exam-item:last-child {
+            border-bottom: none;
+        }
+
+        .exam-item:hover {
+            background: #fafcfe;
+        }
+
+        .exam-info h3 {
+            margin: 0 0 5px;
+            color: #29445d;
+            font-size: 13px;
+        }
+
+        .exam-info p {
+            margin: 0;
+            color: #7a8591;
+            font-size: 10px;
+        }
+
+        .exam-date {
+            text-align: right;
+        }
+
+        .exam-date strong {
+            display: block;
+            color: #24609a;
+            font-size: 12px;
+        }
+
+        .exam-date span {
+            display: block;
+            margin-top: 4px;
+            color: #8a949d;
+            font-size: 9px;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px 20px;
+            color: #7a8591;
+            font-size: 12px;
+        }
+
+
+        /* ==================================================
+           REGISTRATIONS
+        ================================================== */
+
+        .admin-registrations {
+            background: #fff;
+            border: 1px solid #dfe6ed;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(24,59,92,.04);
+        }
+
+        .registration-table-wrapper {
+            overflow-x: auto;
+        }
+
+        .registration-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 850px;
+        }
+
+        .registration-table th {
+            background: #f5f8fb;
+            color: #526577;
+            font-size: 11px;
+            font-weight: 700;
+            text-align: left;
+            padding: 13px 16px;
+            border-bottom: 1px solid #dfe6ed;
+        }
+
+        .registration-table td {
+            color: #5f6f7e;
+            font-size: 12px;
+            padding: 15px 16px;
+            border-bottom: 1px solid #edf1f4;
+            vertical-align: top;
+        }
+
+        .registration-table tbody tr:hover {
+            background: #fafcfe;
+        }
+
+        .registration-table td strong {
+            color: #29445d;
+        }
+
+        .subject-tag {
+            display: inline-block;
+            background: #eef4f9;
+            color: #24609a;
+            border-radius: 5px;
+            padding: 4px 7px;
+            margin: 2px 3px 2px 0;
+            font-size: 10px;
+        }
+
+        .registration-status {
+            display: inline-block;
+            background: #edf8f1;
+            color: #276749;
+            border: 1px solid #c7e8d2;
+            border-radius: 15px;
+            padding: 5px 9px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .no-registrations {
+            text-align: center;
+            padding: 45px 20px;
+        }
+
+        .no-registrations > div {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .no-registrations h3 {
+            color: #344b61;
+            font-size: 15px;
+        }
+
+        .no-registrations p {
+            color: #7a8591;
+            font-size: 12px;
+        }
+
+
+        /* ==================================================
+           FOOTER
+        ================================================== */
+
+        .footer {
+            margin-top: 50px;
+            padding: 20px;
+            background: #183b5c;
+            color: white;
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            opacity: .8;
+        }
+
+
+        /* ==================================================
+           RESPONSIVE
+        ================================================== */
+
+        @media(max-width: 1000px) {
+
+            .admin-service-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .quick-actions {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+
+        @media(max-width: 800px) {
+
+            .admin-statistics,
+            .admin-statistics.second-row {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+
+        @media(max-width: 600px) {
+
+            .top-header {
+                padding: 17px 20px;
+            }
+
+            .header-container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .dashboard-container {
+                margin-top: 25px;
+            }
+
+            .admin-service-grid,
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome h2 {
+                font-size: 23px;
+            }
+
+            .exam-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .exam-date {
+                text-align: left;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+        }
+
+
+        /* ==================================================
+           PRINT
+        ================================================== */
+
+        @media print {
+
+            .top-header,
+            .quick-actions,
+            .footer {
+                display: none;
+            }
+
+            body {
+                background: white;
+            }
+
+            .dashboard-container {
+                margin: 0;
+                max-width: 100%;
+            }
+
+            .admin-service-card {
+                break-inside: avoid;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ======================================================
+     HEADER
+====================================================== -->
+
+<header class="top-header">
+
+    <div class="header-container">
+
+        <div class="brand">
+
+            <div class="brand-logo">
+                ES
+            </div>
+
+            <div>
+
+                <h1>
+                    Examination Service Portal
+                </h1>
+
+                <p>
+                    Administrator Dashboard
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="header-actions">
+
+            <span class="admin-name">
+                Welcome, {{ admin_name }}
+            </span>
+
+            <a href="{{ url_for('logout') }}"
+               class="logout">
+
+                Logout
+
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+
+<!-- ======================================================
+     MAIN DASHBOARD
+====================================================== -->
+
+<main class="dashboard-container">
+
+
+    <!-- WELCOME -->
+
+    <section class="welcome">
+
+        <span>
+            ADMINISTRATION
+        </span>
+
+        <h2>
+            Admin Dashboard
+        </h2>
+
+        <p>
+            Manage students, examinations and academic services
+            from one centralized portal.
+        </p>
+
+    </section>
+
+
+
+    <!-- ==================================================
+         PRIMARY STATISTICS
+    ================================================== -->
+
+    <section class="admin-statistics">
+
+
+        <!-- STUDENTS -->
+
+        <div class="admin-stat-card">
+
+            <div class="admin-stat-icon">
+                👨‍🎓
+            </div>
+
+            <div>
+
+                <span>
+                    Total Students
+                </span>
+
+                <strong>
+                    {{ total_students }}
+                </strong>
+
+                <div class="stat-description">
+                    Registered student accounts
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- REGISTRATIONS -->
+
+        <div class="admin-stat-card">
+
+            <div class="admin-stat-icon">
+                📝
+            </div>
+
+            <div>
+
+                <span>
+                    Exam Registrations
+                </span>
+
+                <strong>
+                    {{ total_registrations }}
+                </strong>
+
+                <div class="stat-description">
+                    Student examination registrations
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- SUBJECTS -->
+
+        <div class="admin-stat-card">
+
+            <div class="admin-stat-icon">
+                📚
+            </div>
+
+            <div>
+
+                <span>
+                    Subjects Registered
+                </span>
+
+                <strong>
+                    {{ total_subjects_registered }}
+                </strong>
+
+                <div class="stat-description">
+                    Total selected subjects
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- ==================================================
+         SECONDARY STATISTICS
+    ================================================== -->
+
+    <section class="admin-statistics second-row">
+
+
+        <!-- EXAMINATIONS -->
+
+        <div class="admin-stat-card">
+
+            <div class="admin-stat-icon">
+                🗓️
+            </div>
+
+            <div>
+
+                <span>
+                    Total Examinations
+                </span>
+
+                <strong>
+                    {{ total_examinations }}
+                </strong>
+
+                <div class="stat-description">
+                    Examinations created
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- UPCOMING -->
+
+        <div class="admin-stat-card">
+
+            <div class="admin-stat-icon">
+                📅
+            </div>
+
+            <div>
+
+                <span>
+                    Upcoming Examinations
+                </span>
+
+                <strong>
+                    {{ upcoming_examinations|length }}
+                </strong>
+
+                <div class="stat-description">
+                    Scheduled from today onwards
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- HALL TICKETS -->
+
+        <div class="admin-stat-card">
+
+            <div class="admin-stat-icon">
+                🎫
+            </div>
+
+            <div>
+
+                <span>
+                    Published Hall Tickets
+                </span>
+
+                <strong>
+                    {{ published_hall_tickets }}
+                </strong>
+
+                <div class="stat-description">
+                    {{ total_hall_tickets }} total generated
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- ==================================================
+         QUICK ACTIONS
+    ================================================== -->
+
+    <section>
+
+        <div class="section-title">
+
+            <span class="section-label">
+                QUICK ACTIONS
+            </span>
+
+            <h2>
+                Frequently Used Services
+            </h2>
+
+            <p>
+                Access important examination administration functions quickly.
+            </p>
+
+        </div>
+
+
+        <div class="quick-actions">
+
+
+            <a href="{{ url_for('admin_students') }}"
+               class="quick-action">
+
+                <div class="quick-action-icon">
+                    👨‍🎓
+                </div>
+
+                <div class="quick-action-text">
+
+                    <strong>
+                        Add / Manage Students
+                    </strong>
+
+                    <span>
+                        Student records
+                    </span>
+
+                </div>
+
+            </a>
+
+
+            <a href="{{ url_for('admin_subjects') }}"
+               class="quick-action">
+
+                <div class="quick-action-icon">
+                    📚
+                </div>
+
+                <div class="quick-action-text">
+
+                    <strong>
+                        Manage Subjects
+                    </strong>
+
+                    <span>
+                        Semester subjects
+                    </span>
+
+                </div>
+
+            </a>
+
+
+            <a href="{{ url_for('admin_examinations') }}"
+               class="quick-action">
+
+                <div class="quick-action-icon">
+                    📝
+                </div>
+
+                <div class="quick-action-text">
+
+                    <strong>
+                        Create Examination
+                    </strong>
+
+                    <span>
+                        Exam scheduling
+                    </span>
+
+                </div>
+
+            </a>
+
+
+            <a href="{{ url_for('admin_hall_tickets') }}"
+               class="quick-action">
+
+                <div class="quick-action-icon">
+                    🎫
+                </div>
+
+                <div class="quick-action-text">
+
+                    <strong>
+                        Hall Tickets
+                    </strong>
+
+                    <span>
+                        Generate & manage
+                    </span>
+
+                </div>
+
+            </a>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ==================================================
+         PORTAL MANAGEMENT
+    ================================================== -->
+
+    <section>
+
+        <div class="section-title">
+
+            <span class="section-label">
+                ADMINISTRATION SERVICES
+            </span>
+
+            <h2>
+                Portal Management
+            </h2>
+
+            <p>
+                Manage the major components of the examination service system.
+            </p>
+
+        </div>
+
+
+        <div class="admin-service-grid">
+
+
+            <!-- STUDENTS -->
+
+            <a href="{{ url_for('admin_students') }}"
+               class="admin-service-card">
+
+                <div class="service-icon">
+                    👨‍🎓
+                </div>
+
+                <h3>
+                    Manage Students
+                </h3>
+
+                <p>
+                    Add, edit, view and remove student records.
+                </p>
+
+            </a>
+
+
+            <!-- SUBJECTS -->
+
+            <a href="{{ url_for('admin_subjects') }}"
+               class="admin-service-card">
+
+                <div class="service-icon">
+                    📚
+                </div>
+
+                <h3>
+                    Manage Subjects
+                </h3>
+
+                <p>
+                    Add and manage subjects for different semesters.
+                </p>
+
+            </a>
+
+
+            <!-- EXAMINATIONS -->
+
+            <a href="{{ url_for('admin_examinations') }}"
+               class="admin-service-card">
+
+                <div class="service-icon">
+                    📝
+                </div>
+
+                <h3>
+                    Examination Management
+                </h3>
+
+                <p>
+                    Create and manage university examinations.
+                </p>
+
+            </a>
+
+
+            <!-- TIMETABLE -->
+
+            <a href="{{ url_for('admin_timetable') }}"
+               class="admin-service-card">
+
+                <div class="service-icon">
+                    📅
+                </div>
+
+                <h3>
+                    Timetable
+                </h3>
+
+                <p>
+                    Manage examination schedules, timings and venues.
+                </p>
+
+            </a>
+
+
+            <!-- HALL TICKETS -->
+
+            <a href="{{ url_for('admin_hall_tickets') }}"
+               class="admin-service-card">
+
+                <div class="service-icon">
+                    🎫
+                </div>
+
+                <h3>
+                    Hall Tickets
+                </h3>
+
+                <p>
+                    Generate and manage student examination hall tickets.
+                </p>
+
+            </a>
+
+
+            <!-- RESULTS -->
+
+            <a href="#"
+               class="admin-service-card">
+
+                <div class="service-icon">
+                    📊
+                </div>
+
+                <h3>
+                    Results
+                </h3>
+
+                <p>
+                    Publish and manage student examination results.
+                </p>
+
+                <span class="coming-soon">
+                    Coming Soon
+                </span>
+
+            </a>
+
+
+            <!-- NOTIFICATIONS -->
+
+            <a href="#"
+               class="admin-service-card">
+
+                <div class="service-icon">
+                    🔔
+                </div>
+
+                <h3>
+                    Notifications
+                </h3>
+
+                <p>
+                    Publish important examination announcements.
+                </p>
+
+                <span class="coming-soon">
+                    Coming Soon
+                </span>
+
+            </a>
+
+
+            <!-- STUDENT REQUESTS -->
+
+            <a href="#"
+               class="admin-service-card">
+
+                <div class="service-icon">
+                    📩
+                </div>
+
+                <h3>
+                    Student Requests
+                </h3>
+
+                <p>
+                    Review and manage requests submitted by students.
+                </p>
+
+                <span class="coming-soon">
+                    Coming Soon
+                </span>
+
+            </a>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ==================================================
+         UPCOMING EXAMINATIONS
+    ================================================== -->
+
+    <section class="upcoming-section">
+
+        <div class="section-heading">
+
+            <span class="section-label">
+                EXAMINATION SCHEDULE
+            </span>
+
+            <h2>
+                Upcoming Examinations
+            </h2>
+
+            <p>
+                Examinations currently scheduled in the portal.
+            </p>
+
+        </div>
+
+
+        {% if upcoming_examinations %}
+
+        <div class="exam-list">
+
+            {% for exam in upcoming_examinations[:5] %}
+
+            <div class="exam-item">
+
+                <div class="exam-info">
+
+                    <h3>
+                        {{ exam["exam_name"] }}
+                    </h3>
+
+                    <p>
+                        {{ exam["exam_type"] }}
+                        &nbsp; • &nbsp;
+                        Semester {{ exam["semester"] }}
+                    </p>
+
+                </div>
+
+                <div class="exam-date">
+
+                    <strong>
+                        {{ exam["exam_date"] }}
+                    </strong>
+
+                    <span>
+                        Last registration:
+                        {{ exam["last_date"] }}
+                    </span>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="no-data">
+
+            📅
+
+            <br><br>
+
+            No upcoming examinations scheduled.
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+
+
+    <!-- ==================================================
+         RECENT REGISTRATIONS
+    ================================================== -->
+
+    <section class="admin-registrations">
+
+        <div class="section-heading">
+
+            <span class="section-label">
+                EXAMINATION ACTIVITY
+            </span>
+
+            <h2>
+                Recent Exam Registrations
+            </h2>
+
+            <p>
+                Monitor the latest student examination registrations.
+            </p>
+
+        </div>
+
+
+        {% if registrations %}
+
+        <div class="registration-table-wrapper">
+
+            <table class="registration-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            USN
+                        </th>
+
+                        <th>
+                            Student
+                        </th>
+
+                        <th>
+                            Semester
+                        </th>
+
+                        <th>
+                            Subjects
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for registration in registrations %}
+
+                    <tr>
+
+                        <td>
+
+                            <strong>
+                                {{ registration["usn"] }}
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+
+                            {{ registration["student_name"] }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ registration["semester"] }}
+
+                        </td>
+
+
+                        <td>
+
+                            {% if registration.get("selected_subjects") %}
+
+                                {% for subject in registration["selected_subjects"] %}
+
+                                    <span class="subject-tag">
+
+                                        {{ subject["subject_code"] }}
+
+                                    </span>
+
+                                {% endfor %}
+
+                            {% elif registration.get("subjects") %}
+
+                                {% for subject in registration["subjects"] %}
+
+                                    <span class="subject-tag">
+
+                                        {{ subject }}
+
+                                    </span>
+
+                                {% endfor %}
+
+                            {% else %}
+
+                                -
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="registration-status">
+                                Registered
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        {% else %}
+
+        <div class="no-registrations">
+
+            <div>
+                📋
+            </div>
+
+            <h3>
+                No Exam Registrations Yet
+            </h3>
+
+            <p>
+                Student examination registrations will appear here.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+
+</main>
+
+
+
+<!-- ======================================================
+     FOOTER
+====================================================== -->
+
+<footer class="footer">
+
+    <div class="footer-bottom">
+
+        <p>
+            © 2026 Integrated Student Examination Service Portal
+        </p>
+
+        <p>
+            Mini Project | VTU
+        </p>
+
+    </div>
+
+</footer>
+
+
+</body>
+
+</html>

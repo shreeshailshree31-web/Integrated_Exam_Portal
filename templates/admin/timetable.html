@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Timetable Management | VTU Examination Portal</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        .page-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #666;
+        }
+
+        .form-card {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            margin-bottom: 35px;
+        }
+
+        .form-card h2 {
+            margin-bottom: 8px;
+        }
+
+        .form-card .description {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            font-size: 15px;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        .submit-area {
+            margin-top: 25px;
+        }
+
+        .btn-primary {
+            padding: 12px 22px;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .error-message {
+            background: #fff1f2;
+            color: #b91c1c;
+            padding: 12px 15px;
+            border-radius: 7px;
+            margin-bottom: 20px;
+        }
+
+        .table-card {
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            overflow-x: auto;
+        }
+
+        .table-card h2 {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 13px 12px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        th {
+            font-weight: 600;
+            background: #f8fafc;
+        }
+
+        .exam-name {
+            font-weight: 600;
+        }
+
+        .exam-type {
+            font-size: 13px;
+            color: #666;
+            margin-top: 3px;
+        }
+
+        .delete-btn {
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .no-data {
+            text-align: center;
+            color: #777;
+            padding: 25px;
+        }
+
+        @media (max-width: 768px) {
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+
+            .page-container {
+                margin: 20px auto;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+<div class="page-container">
+
+    <div class="page-header">
+
+        <h1>Timetable Management</h1>
+
+        <p>
+            Create and manage university examination timetables.
+        </p>
+
+    </div>
+
+
+    <div class="form-card">
+
+        <h2>Add Timetable Entry</h2>
+
+        <p class="description">
+            Schedule an examination for a subject.
+        </p>
+
+
+        {% if error %}
+
+        <div class="error-message">
+            ⚠️ {{ error }}
+        </div>
+
+        {% endif %}
+
+
+        <form method="POST">
+
+            <div class="form-grid">
+
+                <!-- EXAMINATION -->
+
+                <div class="form-group full-width">
+
+                    <label for="exam_id">
+                        Examination
+                    </label>
+
+                    <select
+                        name="exam_id"
+                        id="exam_id"
+                        required
+                    >
+
+                        <option value="">
+                            Select Examination
+                        </option>
+
+                        <!-- FIXED: examinations instead of exams -->
+
+                        {% for exam in examinations %}
+
+                        <option
+                            value="{{ exam['_id'] }}"
+                            data-semester="{{ exam['semester'] }}"
+                        >
+
+                            Sem {{ exam["semester"] }}
+                            -
+                            {{ exam["exam_name"] }}
+                            -
+                            {{ exam["exam_type"] }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- SEMESTER -->
+
+                <div class="form-group">
+
+                    <label for="semester">
+                        Semester
+                    </label>
+
+                    <select
+                        name="semester"
+                        id="semester"
+                        required
+                    >
+
+                        <option value="">
+                            Select Semester
+                        </option>
+
+                        {% for i in range(1, 9) %}
+
+                        <option value="{{ i }}">
+                            {{ i }}th Semester
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- SUBJECT -->
+
+                <div class="form-group">
+
+                    <label for="subject_id">
+                        Subject
+                    </label>
+
+                    <select
+                        name="subject_id"
+                        id="subject_id"
+                        required
+                    >
+
+                        <option value="">
+                            Select Subject
+                        </option>
+
+                        {% for subject in subjects %}
+
+                        <option
+                            value="{{ subject['_id'] }}"
+                            data-semester="{{ subject['semester'] }}"
+                        >
+
+                            Sem {{ subject["semester"] }}
+                            -
+                            {{ subject["subject_code"] }}
+                            -
+                            {{ subject["subject_name"] }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- EXAMINATION DATE -->
+
+                <div class="form-group">
+
+                    <label for="exam_date">
+                        Examination Date
+                    </label>
+
+                    <input
+                        type="date"
+                        name="exam_date"
+                        id="exam_date"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- VENUE -->
+
+                <div class="form-group">
+
+                    <label for="venue">
+                        Room / Venue
+                    </label>
+
+                    <input
+                        type="text"
+                        name="venue"
+                        id="venue"
+                        placeholder="Example: Block A - Room 101"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- START TIME -->
+
+                <div class="form-group">
+
+                    <label for="start_time">
+                        Start Time
+                    </label>
+
+                    <input
+                        type="time"
+                        name="start_time"
+                        id="start_time"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- END TIME -->
+
+                <div class="form-group">
+
+                    <label for="end_time">
+                        End Time
+                    </label>
+
+                    <input
+                        type="time"
+                        name="end_time"
+                        id="end_time"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="submit-area">
+
+                <button
+                    type="submit"
+                    class="btn-primary"
+                >
+                    + Add Timetable Entry
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- TIMETABLE -->
+
+    <div class="table-card">
+
+        <h2>Examination Timetable</h2>
+
+
+        {% if timetable %}
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Semester</th>
+                    <th>Examination</th>
+                    <th>Subject</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Venue</th>
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for entry in timetable %}
+
+                <tr>
+
+                    <td>
+                        {{ entry["semester"] }}
+                    </td>
+
+
+                    <td>
+
+                        {% if entry.get("exam_name") %}
+
+                        <div class="exam-name">
+                            {{ entry["exam_name"] }}
+                        </div>
+
+                        {% if entry.get("exam_type") %}
+
+                        <div class="exam-type">
+                            {{ entry["exam_type"] }}
+                        </div>
+
+                        {% endif %}
+
+                        {% else %}
+
+                        <span>—</span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        <strong>
+                            {{ entry.get("subject_code", "") }}
+                        </strong>
+
+                        <br>
+
+                        {{ entry.get("subject_name", "") }}
+
+                    </td>
+
+
+                    <td>
+                        {{ entry.get("exam_date", "—") }}
+                    </td>
+
+
+                    <td>
+
+                        {{ entry.get("start_time", "—") }}
+
+                        {% if entry.get("end_time") %}
+
+                        -
+                        {{ entry.get("end_time") }}
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+                        {{ entry.get("venue", "—") }}
+                    </td>
+
+
+                    <td>
+
+                        <a
+                            href="{{ url_for('delete_timetable', timetable_id=entry['_id']) }}"
+                            class="delete-btn"
+                            onclick="return confirm('Delete this timetable entry?');"
+                        >
+                            Delete
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        {% else %}
+
+        <div class="no-data">
+
+            No timetable entries have been created yet.
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+<script>
+
+    const examSelect =
+        document.getElementById("exam_id");
+
+    const semesterSelect =
+        document.getElementById("semester");
+
+    const subjectSelect =
+        document.getElementById("subject_id");
+
+
+    function filterSubjects() {
+
+        const selectedSemester =
+            semesterSelect.value;
+
+        const options =
+            subjectSelect.querySelectorAll("option");
+
+        subjectSelect.value = "";
+
+        options.forEach(function(option) {
+
+            if (option.value === "") {
+                option.style.display = "";
+                return;
+            }
+
+            const subjectSemester =
+                option.getAttribute("data-semester");
+
+            if (
+                selectedSemester !== ""
+                &&
+                String(subjectSemester) === String(selectedSemester)
+            ) {
+
+                option.style.display = "";
+
+            } else {
+
+                option.style.display = "none";
+
+            }
+
+        });
+
+    }
+
+
+    examSelect.addEventListener(
+        "change",
+        function() {
+
+            const selectedOption =
+                examSelect.options[
+                    examSelect.selectedIndex
+                ];
+
+            const examSemester =
+                selectedOption.getAttribute(
+                    "data-semester"
+                );
+
+            if (examSemester) {
+
+                semesterSelect.value =
+                    examSemester;
+
+                filterSubjects();
+
+            }
+
+        }
+    );
+
+
+    semesterSelect.addEventListener(
+        "change",
+        function() {
+
+            filterSubjects();
+
+        }
+    );
+
+
+    filterSubjects();
+
+</script>
+
+</body>
+
+</html>

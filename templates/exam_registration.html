@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Exam Registration | Integrated Exam Portal</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        .page-wrapper {
+            min-height: 100vh;
+        }
+
+        /* HEADER */
+
+        .top-header {
+            background: linear-gradient(135deg, #123c69, #1769aa);
+            color: white;
+            padding: 22px 6%;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+        }
+
+        .header-content {
+            max-width: 1150px;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .portal-title {
+            margin: 0;
+            font-size: 25px;
+            font-weight: 700;
+        }
+
+        .portal-subtitle {
+            margin: 5px 0 0;
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .back-btn {
+            display: inline-block;
+            text-decoration: none;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.5);
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.12);
+        }
+
+        /* MAIN */
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px 50px;
+        }
+
+        .page-heading {
+            margin-bottom: 25px;
+        }
+
+        .page-heading h1 {
+            margin: 0;
+            font-size: 30px;
+            color: #123c69;
+        }
+
+        .page-heading p {
+            margin-top: 8px;
+            color: #6b7280;
+            font-size: 15px;
+        }
+
+        /* STUDENT CARD */
+
+        .student-card {
+            background: white;
+            border-radius: 14px;
+            padding: 24px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+            margin-bottom: 25px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .student-card h2 {
+            margin-top: 0;
+            color: #123c69;
+            font-size: 19px;
+        }
+
+        .student-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .student-item {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 9px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .student-label {
+            display: block;
+            color: #6b7280;
+            font-size: 12px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .student-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        /* REGISTRATION CARD */
+
+        .registration-card {
+            background: white;
+            border-radius: 14px;
+            padding: 28px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+            border: 1px solid #e5e7eb;
+        }
+
+        .registration-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .registration-header h2 {
+            margin: 0;
+            color: #123c69;
+            font-size: 21px;
+        }
+
+        .semester-badge {
+            background: #e8f1fb;
+            color: #1769aa;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        /* ERROR */
+
+        .error-message {
+            background: #fff1f2;
+            border: 1px solid #fecdd3;
+            color: #be123c;
+            padding: 13px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        /* INFO */
+
+        .info-message {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1d4ed8;
+            padding: 13px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        /* SUBJECT LIST */
+
+        .subject-list {
+            display: grid;
+            gap: 13px;
+        }
+
+        .subject-option {
+            position: relative;
+        }
+
+        .subject-checkbox {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .subject-label {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 17px 18px;
+            border: 1px solid #dbe2ea;
+            border-radius: 10px;
+            cursor: pointer;
+            background: #ffffff;
+            transition: all 0.2s ease;
+        }
+
+        .subject-label:hover {
+            border-color: #1769aa;
+            background: #f8fbff;
+        }
+
+        .check-box {
+            width: 21px;
+            height: 21px;
+            border: 2px solid #9ca3af;
+            border-radius: 5px;
+            flex-shrink: 0;
+            position: relative;
+            transition: 0.2s;
+        }
+
+        .subject-checkbox:checked + .subject-label {
+            border-color: #1769aa;
+            background: #eff6ff;
+        }
+
+        .subject-checkbox:checked + .subject-label .check-box {
+            background: #1769aa;
+            border-color: #1769aa;
+        }
+
+        .subject-checkbox:checked + .subject-label .check-box::after {
+            content: "✓";
+            position: absolute;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            left: 3px;
+            top: -1px;
+        }
+
+        .subject-details {
+            flex: 1;
+        }
+
+        .subject-code {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 700;
+            color: #1769aa;
+            background: #e8f1fb;
+            padding: 4px 8px;
+            border-radius: 5px;
+            margin-bottom: 6px;
+        }
+
+        .subject-name {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        /* SELECTION COUNT */
+
+        .selection-info {
+            margin-top: 20px;
+            padding: 14px 16px;
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #4b5563;
+        }
+
+        .selection-count {
+            font-weight: 700;
+            color: #1769aa;
+        }
+
+        /* BUTTON */
+
+        .submit-section {
+            margin-top: 25px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .submit-btn {
+            border: none;
+            background: linear-gradient(135deg, #123c69, #1769aa);
+            color: white;
+            padding: 13px 28px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(23,105,170,0.25);
+        }
+
+        /* EMPTY */
+
+        .empty-message {
+            text-align: center;
+            padding: 35px 20px;
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            border-radius: 10px;
+            color: #64748b;
+        }
+
+        /* FOOTER */
+
+        .footer {
+            text-align: center;
+            color: #6b7280;
+            font-size: 12px;
+            padding: 20px;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 750px) {
+
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .student-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .registration-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .submit-section {
+                justify-content: stretch;
+            }
+
+            .submit-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page-wrapper">
+
+    <!-- HEADER -->
+
+    <header class="top-header">
+
+        <div class="header-content">
+
+            <div>
+                <h1 class="portal-title">
+                    Integrated Student Examination Service Portal
+                </h1>
+
+                <p class="portal-subtitle">
+                    VTU Examination Management System
+                </p>
+            </div>
+
+            <a
+                href="{{ url_for('student_dashboard') }}"
+                class="back-btn"
+            >
+                ← Back to Dashboard
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- MAIN -->
+
+    <main class="container">
+
+        <div class="page-heading">
+
+            <h1>
+                Examination Registration
+            </h1>
+
+            <p>
+                Select the subjects for which you want to register for the examination.
+            </p>
+
+        </div>
+
+
+        <!-- STUDENT INFORMATION -->
+
+        <section class="student-card">
+
+            <h2>
+                Student Information
+            </h2>
+
+            <div class="student-grid">
+
+                <div class="student-item">
+
+                    <span class="student-label">
+                        Name
+                    </span>
+
+                    <span class="student-value">
+                        {{ student.get('name', 'N/A') }}
+                    </span>
+
+                </div>
+
+
+                <div class="student-item">
+
+                    <span class="student-label">
+                        USN
+                    </span>
+
+                    <span class="student-value">
+                        {{ student.get('usn', 'N/A') }}
+                    </span>
+
+                </div>
+
+
+                <div class="student-item">
+
+                    <span class="student-label">
+                        Branch
+                    </span>
+
+                    <span class="student-value">
+                        {{ student.get('branch', 'N/A') }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- REGISTRATION -->
+
+        <section class="registration-card">
+
+            <div class="registration-header">
+
+                <h2>
+                    Select Subjects
+                </h2>
+
+                <span class="semester-badge">
+                    Semester {{ student.get('semester', 'N/A') }}
+                </span>
+
+            </div>
+
+
+            {% if error %}
+
+                <div class="error-message">
+                    {{ error }}
+                </div>
+
+            {% endif %}
+
+
+            <div class="info-message">
+
+                Please select one or more subjects and click
+                <strong>Submit Registration</strong>.
+
+            </div>
+
+
+            <form
+                method="POST"
+                action="{{ url_for('exam_registration') }}"
+                id="registrationForm"
+            >
+
+                {% if subjects %}
+
+                    <div class="subject-list">
+
+                        {% for subject in subjects %}
+
+                            <div class="subject-option">
+
+                                <!-- IMPORTANT:
+                                     Backend app.py expects name="subjects"
+                                -->
+
+                                <input
+                                    type="checkbox"
+                                    class="subject-checkbox"
+                                    name="subjects"
+                                    value="{{ subject['_id'] }}"
+                                    id="subject_{{ subject['_id'] }}"
+                                    data-code="{{ subject.get('subject_code', '') }}"
+                                    data-name="{{ subject.get('subject_name', '') }}"
+                                >
+
+                                <label
+                                    class="subject-label"
+                                    for="subject_{{ subject['_id'] }}"
+                                >
+
+                                    <span class="check-box"></span>
+
+                                    <span class="subject-details">
+
+                                        <span class="subject-code">
+                                            {{ subject.get('subject_code', 'N/A') }}
+                                        </span>
+
+                                        <span class="subject-name">
+                                            {{ subject.get('subject_name', 'Unnamed Subject') }}
+                                        </span>
+
+                                    </span>
+
+                                </label>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- SELECTION COUNT -->
+
+                    <div class="selection-info">
+
+                        Selected subjects:
+
+                        <span
+                            class="selection-count"
+                            id="selectionCount"
+                        >
+                            0
+                        </span>
+
+                    </div>
+
+
+                    <!-- SUBMIT -->
+
+                    <div class="submit-section">
+
+                        <button
+                            type="submit"
+                            class="submit-btn"
+                        >
+                            Submit Registration
+                        </button>
+
+                    </div>
+
+                {% else %}
+
+                    <div class="empty-message">
+
+                        <strong>
+                            No subjects available.
+                        </strong>
+
+                        <br><br>
+
+                        No subjects have been added for your semester yet.
+                        Please contact the examination administrator.
+
+                    </div>
+
+                {% endif %}
+
+            </form>
+
+        </section>
+
+    </main>
+
+
+    <footer class="footer">
+
+        Integrated Student Examination Service Portal
+        <br>
+        VTU Examination Management System
+
+    </footer>
+
+</div>
+
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const form = document.getElementById("registrationForm");
+
+        const checkboxes =
+            document.querySelectorAll(
+                'input[name="subjects"]'
+            );
+
+        const selectionCount =
+            document.getElementById(
+                "selectionCount"
+            );
+
+
+        /* -------------------------------------------------
+           UPDATE SELECTED SUBJECT COUNT
+        ------------------------------------------------- */
+
+        function updateSelectionCount() {
+
+            const selected =
+                document.querySelectorAll(
+                    'input[name="subjects"]:checked'
+                );
+
+            if (selectionCount) {
+
+                selectionCount.textContent =
+                    selected.length;
+
+            }
+
+        }
+
+
+        /* -------------------------------------------------
+           CHECKBOX EVENTS
+        ------------------------------------------------- */
+
+        checkboxes.forEach(function (checkbox) {
+
+            checkbox.addEventListener(
+                "change",
+                updateSelectionCount
+            );
+
+        });
+
+
+        /* -------------------------------------------------
+           FORM VALIDATION
+        ------------------------------------------------- */
+
+        if (form) {
+
+            form.addEventListener(
+                "submit",
+                function (event) {
+
+                    const selected =
+                        document.querySelectorAll(
+                            'input[name="subjects"]:checked'
+                        );
+
+
+                    if (selected.length === 0) {
+
+                        event.preventDefault();
+
+                        alert(
+                            "Please select at least one subject."
+                        );
+
+                        return false;
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        updateSelectionCount();
+
+    });
+
+</script>
+
+</body>
+</html>

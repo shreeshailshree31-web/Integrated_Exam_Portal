@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Registration Successful | Integrated Exam Portal</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #1f2937;
+        }
+
+        .success-container {
+            width: 100%;
+            max-width: 650px;
+        }
+
+        .success-card {
+            background: white;
+            border-radius: 18px;
+            padding: 45px 40px;
+            text-align: center;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e5e7eb;
+        }
+
+        .success-icon {
+            width: 85px;
+            height: 85px;
+            margin: 0 auto 25px;
+            border-radius: 50%;
+            background: #e8f7ee;
+            color: #16a34a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 45px;
+            font-weight: bold;
+        }
+
+        h1 {
+            font-size: 30px;
+            margin-bottom: 12px;
+            color: #111827;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .student-info {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 28px;
+            text-align: left;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 9px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: #6b7280;
+            font-weight: 600;
+        }
+
+        .info-value {
+            color: #111827;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .message-box {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1e40af;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 28px;
+            line-height: 1.5;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            text-decoration: none;
+            padding: 12px 22px;
+            border-radius: 9px;
+            font-weight: 600;
+            transition: 0.2s ease;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .portal-name {
+            margin-top: 30px;
+            font-size: 13px;
+            color: #9ca3af;
+        }
+
+        @media (max-width: 600px) {
+            .success-card {
+                padding: 35px 22px;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+
+            .info-row {
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .info-value {
+                text-align: left;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="success-container">
+
+    <div class="success-card">
+
+        <div class="success-icon">
+            ✓
+        </div>
+
+        <h1>Registration Successful!</h1>
+
+        <p class="subtitle">
+            Your examination registration has been submitted successfully.
+            Your selected subjects have been registered in the portal.
+        </p>
+
+        {% if student %}
+
+        <div class="student-info">
+
+            <div class="info-row">
+                <span class="info-label">Student Name</span>
+                <span class="info-value">
+                    {{ student.name }}
+                </span>
+            </div>
+
+            <div class="info-row">
+                <span class="info-label">USN</span>
+                <span class="info-value">
+                    {{ student.usn }}
+                </span>
+            </div>
+
+            <div class="info-row">
+                <span class="info-label">Semester</span>
+                <span class="info-value">
+                    {{ student.semester }}
+                </span>
+            </div>
+
+            {% if selected_count %}
+            <div class="info-row">
+                <span class="info-label">Subjects Registered</span>
+                <span class="info-value">
+                    {{ selected_count }}
+                </span>
+            </div>
+            {% endif %}
+
+        </div>
+
+        {% endif %}
+
+        <div class="message-box">
+            Please keep your registration details safely.
+            You can return to your dashboard to view your examination
+            information and other portal services.
+        </div>
+
+        <div class="buttons">
+
+            <a href="{{ url_for('student_dashboard') }}"
+               class="btn btn-primary">
+                Go to Dashboard
+            </a>
+
+            <a href="{{ url_for('exam_registration') }}"
+               class="btn btn-secondary">
+                Register Another Exam
+            </a>
+
+        </div>
+
+        <div class="portal-name">
+            Integrated Student Examination Service Portal
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

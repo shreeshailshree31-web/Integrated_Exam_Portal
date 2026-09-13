@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Dashboard | Integrated Exam Portal</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        /* HEADER */
+        .header {
+            background: #1e3a8a;
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+        }
+
+        .header p {
+            margin-top: 5px;
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .logout-btn {
+            background: white;
+            color: #1e3a8a;
+            text-decoration: none;
+            padding: 10px 18px;
+            border-radius: 7px;
+            font-weight: bold;
+        }
+
+        .logout-btn:hover {
+            background: #e5e7eb;
+        }
+
+        /* MAIN CONTAINER */
+        .dashboard-container {
+            width: 92%;
+            max-width: 1150px;
+            margin: 35px auto;
+        }
+
+        /* WELCOME CARD */
+        .welcome-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
+            margin-bottom: 30px;
+        }
+
+        .welcome-card h2 {
+            color: #1e3a8a;
+            margin-bottom: 8px;
+        }
+
+        .welcome-card p {
+            color: #555;
+        }
+
+        /* STUDENT INFORMATION */
+        .student-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .info-box {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .info-box span {
+            display: block;
+            color: #6b7280;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        .info-box strong {
+            font-size: 16px;
+            color: #111827;
+        }
+
+        /* QUICK ACTIONS */
+        .section-title {
+            margin-bottom: 18px;
+            color: #1e3a8a;
+        }
+
+        .quick-action-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .quick-action-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #1f2937;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 145px;
+            transition: 0.2s;
+        }
+
+        .quick-action-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .quick-action-card h3 {
+            color: #1e3a8a;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .quick-action-card p {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .action-arrow {
+            font-size: 28px;
+            color: #1e3a8a;
+            margin-left: 15px;
+        }
+
+        /* FOOTER */
+        .footer {
+            text-align: center;
+            margin-top: 45px;
+            padding: 20px;
+            color: #777;
+            font-size: 13px;
+        }
+
+        /* MOBILE */
+        @media (max-width: 850px) {
+
+            .student-info {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-action-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                padding: 18px;
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .dashboard-container {
+                width: 94%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <div class="header">
+
+        <div>
+            <h1>Integrated Exam Portal</h1>
+            <p>Student Dashboard</p>
+        </div>
+
+        <a href="{{ url_for('logout') }}" class="logout-btn">
+            Logout
+        </a>
+
+    </div>
+
+
+    <!-- MAIN DASHBOARD -->
+    <div class="dashboard-container">
+
+
+        <!-- WELCOME -->
+        <div class="welcome-card">
+
+            <h2>
+                Welcome, {{ student["name"] }} 👋
+            </h2>
+
+            <p>
+                Manage your examination services from one place.
+            </p>
+
+
+            <!-- STUDENT DETAILS -->
+            <div class="student-info">
+
+                <div class="info-box">
+                    <span>USN</span>
+                    <strong>{{ student["usn"] }}</strong>
+                </div>
+
+                <div class="info-box">
+                    <span>Semester</span>
+                    <strong>{{ student["semester"] }}</strong>
+                </div>
+
+                <div class="info-box">
+                    <span>Branch</span>
+                    <strong>{{ student["branch"] }}</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- QUICK ACTIONS -->
+        <h2 class="section-title">
+            Quick Actions
+        </h2>
+
+
+        <div class="quick-action-grid">
+
+
+            <!-- EXAM REGISTRATION -->
+            <a href="{{ url_for('exam_registration') }}"
+               class="quick-action-card">
+
+                <div>
+                    <h3>Exam Registration</h3>
+
+                    <p>
+                        Register for your upcoming university examinations.
+                    </p>
+                </div>
+
+                <span class="action-arrow">
+                    →
+                </span>
+
+            </a>
+
+
+            <!-- VIEW TIMETABLE -->
+            <a href="{{ url_for('student_timetable') }}"
+               class="quick-action-card">
+
+                <div>
+                    <h3>View Timetable</h3>
+
+                    <p>
+                        Check examination dates, times and subject schedules.
+                    </p>
+                </div>
+
+                <span class="action-arrow">
+                    →
+                </span>
+
+            </a>
+
+
+            <!-- HALL TICKET -->
+            <a href="{{ url_for('student_hall_ticket') }}"
+               class="quick-action-card">
+
+                <div>
+                    <h3>Hall Ticket</h3>
+
+                    <p>
+                        View and download your examination hall ticket.
+                    </p>
+                </div>
+
+                <span class="action-arrow">
+                    →
+                </span>
+
+            </a>
+
+
+            <!-- RESULTS -->
+            <a href="#"
+               class="quick-action-card">
+
+                <div>
+                    <h3>Results</h3>
+
+                    <p>
+                        Check your examination results and marks.
+                    </p>
+                </div>
+
+                <span class="action-arrow">
+                    →
+                </span>
+
+            </a>
+
+
+            <!-- NOTIFICATIONS -->
+            <a href="#"
+               class="quick-action-card">
+
+                <div>
+                    <h3>Notifications</h3>
+
+                    <p>
+                        View important examination announcements and updates.
+                    </p>
+                </div>
+
+                <span class="action-arrow">
+                    →
+                </span>
+
+            </a>
+
+
+            <!-- STUDENT REQUESTS -->
+            <a href="#"
+               class="quick-action-card">
+
+                <div>
+                    <h3>Student Requests</h3>
+
+                    <p>
+                        Submit and track examination-related requests.
+                    </p>
+                </div>
+
+                <span class="action-arrow">
+                    →
+                </span>
+
+            </a>
+
+
+        </div>
+
+
+        <!-- FOOTER -->
+        <div class="footer">
+            Integrated Student Examination Service Portal
+            <br>
+            VTU Examination Management System
+        </div>
+
+
+    </div>
+
+</body>
+</html>

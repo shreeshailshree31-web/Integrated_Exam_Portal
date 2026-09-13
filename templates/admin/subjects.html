@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Subject Management | Examination Service Portal</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        .subject-page {
+            padding-bottom: 60px;
+        }
+
+        .subject-form-card,
+        .subject-list-card {
+            background: #ffffff;
+            border: 1px solid #dfe6ed;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 18px rgba(24, 59, 92, 0.04);
+            overflow: hidden;
+        }
+
+        .section-heading {
+            padding: 25px;
+            border-bottom: 1px solid #e7ecf1;
+        }
+
+        .section-heading span {
+            color: #24609a;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .section-heading h2 {
+            color: #183b5c;
+            font-size: 21px;
+            margin-top: 5px;
+        }
+
+        .section-heading p {
+            color: #737f8c;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .subject-form {
+            padding: 25px;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 18px;
+            align-items: end;
+        }
+
+        .form-group label {
+            display: block;
+            color: #344b61;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 7px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 11px 12px;
+            border: 1px solid #cbd6e0;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #344b61;
+            background: #ffffff;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #24609a;
+        }
+
+        .add-button {
+            border: none;
+            background: #12467c;
+            color: white;
+            padding: 11px 20px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .add-button:hover {
+            background: #0d385f;
+        }
+
+        .subject-table-wrapper {
+            overflow-x: auto;
+        }
+
+        .subject-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 750px;
+        }
+
+        .subject-table th {
+            background: #f5f8fb;
+            color: #526577;
+            font-size: 11px;
+            font-weight: 700;
+            text-align: left;
+            padding: 14px 18px;
+            border-bottom: 1px solid #dfe6ed;
+        }
+
+        .subject-table td {
+            color: #5f6f7e;
+            font-size: 12px;
+            padding: 15px 18px;
+            border-bottom: 1px solid #edf1f4;
+        }
+
+        .subject-table tbody tr:hover {
+            background: #fafcfe;
+        }
+
+        .subject-code {
+            color: #183b5c;
+            font-weight: 700;
+        }
+
+        .semester-badge {
+            display: inline-block;
+            background: #eef4f9;
+            color: #24609a;
+            padding: 5px 9px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 7px;
+        }
+
+        .edit-button,
+        .delete-button {
+            display: inline-block;
+            padding: 7px 11px;
+            border-radius: 5px;
+            font-size: 10px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .edit-button {
+            background: #eef4f9;
+            color: #24609a;
+        }
+
+        .delete-button {
+            background: #fff1f1;
+            color: #b42318;
+        }
+
+        .edit-button:hover {
+            background: #dfeaf3;
+        }
+
+        .delete-button:hover {
+            background: #ffe2e2;
+        }
+
+        .error-message {
+            margin: 20px 25px 0;
+            padding: 11px 14px;
+            background: #fff4f4;
+            border: 1px solid #f0caca;
+            color: #a33a3a;
+            border-radius: 6px;
+            font-size: 12px;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 45px 20px;
+            color: #7a8591;
+            font-size: 13px;
+        }
+
+        @media (max-width: 900px) {
+
+            .subject-form {
+                grid-template-columns: 1fr 1fr;
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .subject-form {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header class="top-header">
+
+    <div class="header-container">
+
+        <div class="brand">
+
+            <div class="brand-logo">
+                ES
+            </div>
+
+            <div>
+
+                <h1>
+                    Examination Service Portal
+                </h1>
+
+                <p>
+                    Subject Management
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="header-actions">
+
+            <span class="student-name">
+                Welcome, {{ session["admin_name"] }}
+            </span>
+
+            <a href="{{ url_for('logout') }}"
+               class="header-login">
+
+                Logout
+
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<nav class="navigation">
+
+    <div class="nav-container">
+
+        <a href="{{ url_for('admin_dashboard') }}">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('admin_students') }}">
+            Students
+        </a>
+
+        <a href="{{ url_for('admin_subjects') }}"
+           class="nav-active">
+            Subjects
+        </a>
+
+        <a href="#">
+            Examinations
+        </a>
+
+        <a href="#">
+            Results
+        </a>
+
+        <a href="#">
+            Notifications
+        </a>
+
+    </div>
+
+</nav>
+
+
+<main class="dashboard-container subject-page">
+
+
+    <section class="dashboard-welcome">
+
+        <div>
+
+            <span class="welcome-label">
+                ADMINISTRATION
+            </span>
+
+            <h2>
+                Subject Management
+            </h2>
+
+            <p>
+                Manage subjects available for student examination registration.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ADD SUBJECT -->
+
+    <section class="subject-form-card">
+
+        <div class="section-heading">
+
+            <span>
+                SUBJECT MANAGEMENT
+            </span>
+
+            <h2>
+                Add New Subject
+            </h2>
+
+            <p>
+                Enter the subject details below.
+            </p>
+
+        </div>
+
+
+        {% if error %}
+
+        <div class="error-message">
+
+            ⚠️ {{ error }}
+
+        </div>
+
+        {% endif %}
+
+
+        <form method="POST"
+              class="subject-form">
+
+
+            <div class="form-group">
+
+                <label>
+                    Subject Name
+                </label>
+
+                <input type="text"
+                       name="subject_name"
+                       placeholder="Example: Database Management Systems"
+                       required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Subject Code
+                </label>
+
+                <input type="text"
+                       name="subject_code"
+                       placeholder="Example: BCS501"
+                       required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Semester
+                </label>
+
+                <select name="semester"
+                        required>
+
+                    <option value="">
+                        Select
+                    </option>
+
+                    <option value="1">
+                        1st Semester
+                    </option>
+
+                    <option value="2">
+                        2nd Semester
+                    </option>
+
+                    <option value="3">
+                        3rd Semester
+                    </option>
+
+                    <option value="4">
+                        4th Semester
+                    </option>
+
+                    <option value="5">
+                        5th Semester
+                    </option>
+
+                    <option value="6">
+                        6th Semester
+                    </option>
+
+                    <option value="7">
+                        7th Semester
+                    </option>
+
+                    <option value="8">
+                        8th Semester
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div>
+
+                <button type="submit"
+                        class="add-button">
+
+                    + Add Subject
+
+                </button>
+
+            </div>
+
+
+        </form>
+
+    </section>
+
+
+    <!-- SUBJECT DATABASE -->
+
+    <section class="subject-list-card">
+
+
+        <div class="section-heading">
+
+            <span>
+                SUBJECT DATABASE
+            </span>
+
+            <h2>
+                Available Subjects
+            </h2>
+
+            <p>
+                Subjects currently stored in the examination portal.
+            </p>
+
+        </div>
+
+
+        {% if subjects %}
+
+
+        <div class="subject-table-wrapper">
+
+            <table class="subject-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Subject Code
+                        </th>
+
+                        <th>
+                            Subject Name
+                        </th>
+
+                        <th>
+                            Semester
+                        </th>
+
+                        <th>
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for subject in subjects %}
+
+                    <tr>
+
+                        <td class="subject-code">
+
+                            {{ subject["subject_code"] }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ subject["subject_name"] }}
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="semester-badge">
+
+                                {{ subject["semester"] }}th Semester
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="action-buttons">
+
+                                <a href="{{ url_for('edit_subject', subject_id=subject['_id']) }}"
+                                   class="edit-button">
+
+                                    ✏️ Edit
+
+                                </a>
+
+
+                                <a href="{{ url_for('delete_subject', subject_id=subject['_id']) }}"
+                                   class="delete-button"
+                                   onclick="return confirm('Are you sure you want to delete this subject?');">
+
+                                    🗑️ Delete
+
+                                </a>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        {% else %}
+
+
+        <div class="empty-message">
+
+            📚 No subjects have been added yet.
+
+        </div>
+
+
+        {% endif %}
+
+
+    </section>
+
+
+</main>
+
+
+<footer class="footer">
+
+    <div class="footer-bottom">
+
+        <p>
+            © 2026 Integrated Student Examination Service Portal
+        </p>
+
+        <p>
+            Mini Project | VTU
+        </p>
+
+    </div>
+
+</footer>
+
+
+</body>
+
+</html>
